@@ -44,4 +44,10 @@ leemis_m <- max(leemis_set)
 cho_set_sq <- leemis_set^2
 sum_cho <- sum(cho_set_sq)
 cho_d <- sqrt(sum_cho)
+leemis_only <- list(paste("leemis m =", leemis_m), paste(c(1:9), "-", integer_votes, sep = ""))
+cho_only <- list(paste("cho-gains d =", cho_d), paste(c(1:9), "-", integer_votes, sep = ""))
+both <- list(paste("leemis m =", leemis_m), paste("cho-gains d =", cho_d), paste(c(1:9), "-", integer_votes, sep = ""))
 
+leemis_only
+cho_only
+both
