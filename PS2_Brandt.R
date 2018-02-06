@@ -47,3 +47,48 @@ benford_tests(test_data, "leemis")
 benford_tests(test_data, "cho")
 benford_tests(test_data, "both")
 benford_tests(test_data, "stats")
+
+#2. Create print.benfords function
+
+# variable names
+varnames <- c("leemis m", "cho-gains d")
+
+# Calculate stats
+ones_digits <- c(1:9)
+integer_votes <- NULL
+for (i in ones_digits){
+  integer_votes <- c(integer_votes, length(test_data[as.numeric(substr(test_data,1,1)) == i]))
+}
+total_votes <- length(test_data)
+percent_votes <- integer_votes/total_votes
+logarithm <- log(1+1/ones_digits, base = 10)
+leemis_set <- percent_votes - logarithm
+leemis_m <- max(leemis_set)
+cho_set_sq <- leemis_set^2
+sum_cho <- sum(cho_set_sq)
+cho_d <- sqrt(sum_cho)
+test_stats <- c(leemis_d, cho_d)
+
+# asterisks
+if (leemis_m >= 0.851){
+  leemis_p <- "*"
+} else if (leemis_m >= 0.967){
+  leemis_p <- "**"
+} else if (leemis_m >= 1.212){
+  leemis_p <-  "***"
+} else {
+  leemis_p <- "-"
+}
+
+if (cho_d >= 1.212){
+  cho_p <- "*"
+} else if (cho_d >= 1.330){
+  cho_p <- "**"
+} else if (cho_d >= 1.569){
+  cho_p <- "***"
+} else {
+  cho_p <- "-"
+}
+
+
+
