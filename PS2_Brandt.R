@@ -50,6 +50,65 @@ benford_tests(test_data, "stats")
 
 #2. Create print.benfords function
 
+print.bedfords <- function(data){
+  # variable names
+  varnames <- c("leemis m", "cho-gains d")
+  # Calculate stats
+  ones_digits <- c(1:9)
+  integer_votes <- NULL
+  for (i in ones_digits){
+    integer_votes <- c(integer_votes, length(data[as.numeric(substr(data,1,1)) == i]))
+  }
+  total_votes <- length(data)
+  percent_votes <- integer_votes/total_votes
+  logarithm <- log(1+1/ones_digits, base = 10)
+  leemis_set <- percent_votes - logarithm
+  leemis_m <- max(leemis_set)
+  cho_set_sq <- leemis_set^2
+  sum_cho <- sum(cho_set_sq)
+  cho_d <- sqrt(sum_cho)
+  test_stats <- c(leemis_m, cho_d)
+  # asterisks for signifiance
+  if (leemis_m >= 0.851){
+    leemis_p <- "*"
+  } else if (leemis_m >= 0.967){
+    leemis_p <- "**"
+  } else if (leemis_m >= 1.212){
+    leemis_p <-  "***"
+  } else {
+    leemis_p <- "-"
+  }
+  
+  if (cho_d >= 1.212){
+    cho_p <- "*"
+  } else if (cho_d >= 1.330){
+    cho_p <- "**"
+  } else if (cho_d >= 1.569){
+    cho_p <- "***"
+  } else {
+    cho_p <- "-"
+  }
+  significance <- c(leemis_p, cho_p)
+  # Create bedfords table
+  benfords <- matrix(c(test_stats, significance), ncol = 2, byrow = T)
+  colnames(benfords) <- varnames
+  rownames(benfords) <- c("statistic", "significance")
+  # key
+  insig <- c("p < 0.851", "p < 1.212")
+  p.10 <- c("0.851 <= p < 0.967", "1.212 <= p < 1.330")
+  p.05 <- c("0.967 <= p < 1.212", "1.330 <= p < 1.569")
+  p.01 <- c("p >= 1.212", "p >= 1.569")
+  # Create key table
+  key <- matrix(c(insig, p.10, p.05, p.01), ncol = 2, byrow = T)
+  colnames(key) <- varnames
+  rownames(key) <- c("- significance level", "* significance level", "** significance level", "*** significance level")
+  # make list of two tables
+  both_tables <- list(benfords, key)
+  print (both_tables)
+}
+
+print.bedfords(test_data)
+
 # variable names
 varnames <- c("leemis m", "cho-gains d")
 
