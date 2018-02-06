@@ -67,7 +67,7 @@ leemis_m <- max(leemis_set)
 cho_set_sq <- leemis_set^2
 sum_cho <- sum(cho_set_sq)
 cho_d <- sqrt(sum_cho)
-test_stats <- c(leemis_d, cho_d)
+test_stats <- c(leemis_m, cho_d)
 
 # asterisks
 if (leemis_m >= 0.851){
@@ -89,6 +89,21 @@ if (cho_d >= 1.212){
 } else {
   cho_p <- "-"
 }
+significance <- c(leemis_p, cho_p)
 
+# Create table
+benfords <- matrix(c(test_stats, significance), ncol = 2, byrow = T)
+colnames(benfords) <- varnames
+rownames(benfords) <- c("statistic", "significance")
+benfords
 
+# Key
+insig <- c("p < 0.851", "p < 1.212")
+p.10 <- c("0.851 <= p < 0.967", "1.212 <= p < 1.330")
+p.05 <- c("0.967 <= p < 1.212", "1.330 <= p < 1.569")
+p.01 <- c("p >= 1.212", "p >= 1.569")
 
+key <- matrix(c(insig, p.10, p.05, p.01), ncol = 2, byrow = T)
+colnames(key) <- varnames
+rownames(key) <- c("- significance level", "* significance level", "** significance level", "*** significance level")
+key
