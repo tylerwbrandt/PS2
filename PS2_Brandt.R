@@ -48,8 +48,13 @@ benford_tests(test_data, "cho")
 benford_tests(test_data, "both")
 benford_tests(test_data, "stats")
 
-#2. Create print.benfords function
-
+#2. Create print.bedfords function
+## The print.bedfords function takes in a vector containing observed vote totals as an argument.
+## It will calculate the leemis m statistic and the cho-gains d statistic for your vote totals.
+## The output will contain both the statistics and their significance levels for
+## the respective statistics in a table format.
+## A second table will also appear in the output explaining the significance levels.
+## The full output will be the two tables described in a list
 print.bedfords <- function(data){
   # variable names
   varnames <- c("leemis m", "cho-gains d")
@@ -109,60 +114,13 @@ print.bedfords <- function(data){
 
 print.bedfords(test_data)
 
-# variable names
-varnames <- c("leemis m", "cho-gains d")
-
-# Calculate stats
-ones_digits <- c(1:9)
-integer_votes <- NULL
-for (i in ones_digits){
-  integer_votes <- c(integer_votes, length(test_data[as.numeric(substr(test_data,1,1)) == i]))
-}
-total_votes <- length(test_data)
-percent_votes <- integer_votes/total_votes
-logarithm <- log(1+1/ones_digits, base = 10)
-leemis_set <- percent_votes - logarithm
-leemis_m <- max(leemis_set)
-cho_set_sq <- leemis_set^2
-sum_cho <- sum(cho_set_sq)
-cho_d <- sqrt(sum_cho)
-test_stats <- c(leemis_m, cho_d)
-
-# asterisks
-if (leemis_m >= 0.851){
-  leemis_p <- "*"
-} else if (leemis_m >= 0.967){
-  leemis_p <- "**"
-} else if (leemis_m >= 1.212){
-  leemis_p <-  "***"
-} else {
-  leemis_p <- "-"
+# function to write csv
+## sink_bedfords takes in a file name and a vector containing vote totals as arguments.
+## It runs the print.bedfords() function on the vote totals and then prints the output in the file name
+sink_bedfords <- function(file, data){
+  sink (file)
+  print.bedfords(data)
+  sink()
 }
 
-if (cho_d >= 1.212){
-  cho_p <- "*"
-} else if (cho_d >= 1.330){
-  cho_p <- "**"
-} else if (cho_d >= 1.569){
-  cho_p <- "***"
-} else {
-  cho_p <- "-"
-}
-significance <- c(leemis_p, cho_p)
-
-# Create table
-benfords <- matrix(c(test_stats, significance), ncol = 2, byrow = T)
-colnames(benfords) <- varnames
-rownames(benfords) <- c("statistic", "significance")
-benfords
-
-# Key
-insig <- c("p < 0.851", "p < 1.212")
-p.10 <- c("0.851 <= p < 0.967", "1.212 <= p < 1.330")
-p.05 <- c("0.967 <= p < 1.212", "1.330 <= p < 1.569")
-p.01 <- c("p >= 1.212", "p >= 1.569")
-
-key <- matrix(c(insig, p.10, p.05, p.01), ncol = 2, byrow = T)
-colnames(key) <- varnames
-rownames(key) <- c("- significance level", "* significance level", "** significance level", "*** significance level")
-key
+sink_bedfords("sink_bedfords.csv", test_data)
